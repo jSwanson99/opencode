@@ -88,6 +88,12 @@ export const versionedType = Event.versionedType
 export const durable = Event.durable
 export const ephemeral = Event.ephemeral
 
+// Tags events with the publisher's active trace/span so stream consumers can correlate them. No-op when tracing is off.
+const traceMetadata = (metadata: Record<string, unknown> | undefined) =>
+  Effect.map(Effect.option(Effect.currentSpan), (span) =>
+    Option.isSome(span) ? { traceId: span.value.traceId, spanId: span.value.spanId, ...metadata } : metadata,
+  )
+
 export interface PublishOptions {
   readonly id?: Event.ID
   readonly metadata?: Record<string, unknown>
@@ -513,12 +519,13 @@ export function configured(options?: Options) {
                 (serviceLocation
                   ? { directory: serviceLocation.directory, workspaceID: serviceLocation.workspaceID }
                   : undefined))
+            const metadata = yield* traceMetadata(options?.metadata)
             return yield* publishEvent(
               definition,
               {
                 id: options?.id ?? Event.ID.create(),
                 created: yield* Clock.currentTimeMillis,
-                ...(options?.metadata ? { metadata: options.metadata } : {}),
+                ...(metadata ? { metadata } : {}),
                 type: definition.type,
                 ...(location ? { location } : {}),
                 data,
@@ -542,6 +549,7 @@ export function configured(options?: Options) {
                     }),
                   )
                 }
+                const metadata = yield* traceMetadata(options?.metadata)
                 const location = options?.global
                   ? undefined
                   : (options?.location ??
@@ -555,7 +563,7 @@ export function configured(options?: Options) {
                   event: {
                     id: options?.id ?? Event.ID.create(),
                     created: yield* Clock.currentTimeMillis,
-                    ...(options?.metadata ? { metadata: options.metadata } : {}),
+                    ...(metadata ? { metadata } : {}),
                     type: definition.type,
                     ...(location ? { location } : {}),
                     data,
