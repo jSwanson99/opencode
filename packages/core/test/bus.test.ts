@@ -151,6 +151,21 @@ describe("Bus", () => {
     }),
   )
 
+  it.effect("tags events with the active span and omits trace metadata without one", () =>
+    Effect.gen(function* () {
+      const bus = yield* Bus.Service
+      const plain = yield* bus.publish(Message, { text: "plain" })
+      expect(plain).not.toHaveProperty("metadata")
+
+      const traced = yield* bus
+        .publish(Message, { text: "traced" }, { metadata: { source: "test" } })
+        .pipe(Effect.withSpan("test.publish"))
+      expect(traced.metadata).toMatchObject({ source: "test" })
+      expect(typeof traced.metadata?.traceId).toBe("string")
+      expect(typeof traced.metadata?.spanId).toBe("string")
+    }),
+  )
+
   it.effect("omits ambient and explicit locations for global events", () =>
     Effect.gen(function* () {
       const bus = yield* Bus.Service
