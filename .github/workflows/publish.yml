@@ -9,6 +9,15 @@ on:
       - beta
       - fix/npm-native-binary-install
       - snapshot-*
+    paths-ignore:
+      - "**/*.md"
+      - "**/*.mdx"
+      - ".github/**"
+      - "packages/console/**"
+      - "packages/posts/**"
+      - "packages/web/**"
+      - "services/changelog/**"
+      - "services/www/**"
   workflow_dispatch:
     inputs:
       bump:
