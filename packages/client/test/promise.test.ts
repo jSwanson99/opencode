@@ -66,12 +66,14 @@ test("exposes every standard HTTP API group", () => {
     "artifacts",
     "job",
     "machine",
+    "workspace",
     "migration",
     "usage",
     "config",
   ])
   expect(Object.keys(client.experimental.job)).toEqual(["list", "cancel"])
   expect(Object.keys(client.experimental.machine)).toEqual(["list", "add", "remove"])
+  expect(Object.keys(client.experimental.workspace)).toEqual(["create", "destroy"])
   expect(Object.keys(client.experimental.session)).toEqual([
     "stats",
     "import",

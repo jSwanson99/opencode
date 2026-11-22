@@ -82,7 +82,7 @@ const layer = Layer.effect(
       Effect.orDie,
     )
     // A workspace runs ripgrep through its own spawner. Nothing of the server's reaches it otherwise.
-    return Service.of(make(ID.make(location.workspaceID), driver, { searchable: true }))
+    return Service.of(make(ID.make(location.workspaceID), driver, { searchable: true, shell: driver.shell }))
   }),
 )
 

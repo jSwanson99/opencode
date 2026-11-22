@@ -24,6 +24,8 @@ export class ProviderNotFound extends Schema.TaggedError<ProviderNotFound>()("Wo
 }) {}
 
 export interface Interface {
+  /** The shell that commands run under in this provider's machines, when it is not the server's configured one. */
+  readonly shell?: string
   /**
    * Get-or-create the provider resource backing this logical workspace.
    *

@@ -41,6 +41,7 @@ import { PluginUpdate } from "@opencode/core/plugin/update"
 import { SdkPlugins } from "@opencode/core/plugin/sdk"
 import { WellKnown } from "@opencode/core/wellknown"
 import { Workspace } from "@opencode/core/workspace"
+import { WorkspaceDriver } from "@opencode/core/workspace/driver"
 import { Watcher } from "@opencode/core/filesystem/watcher"
 import { FileWatch } from "@opencode/core/filesystem/file-watch"
 import { HttpRouter } from "effect/http"
@@ -59,6 +60,7 @@ import { formLocationLayer } from "./middleware/form-location"
 import { sessionLocationLayer } from "./middleware/session-location"
 import { ServerInfo } from "./server-info"
 import type { ServerOptions } from "./options"
+import { MicrosandboxWorkspace } from "./workspace/microsandbox"
 
 const applicationServiceNodes = [
   App.node,
@@ -168,6 +170,14 @@ function makeRoutes<AuthError, AuthServices>(
       }),
     ),
     ShellSelect.node.replace(ShellSelect.configured({ gitbash: options.windows?.gitbash })),
+    // Embedders that pass their own providers replace this registry, as their overrides come after it.
+    WorkspaceDriver.node.replace(
+      WorkspaceDriver.registryNode({
+        [MicrosandboxWorkspace.provider]: MicrosandboxWorkspace.driver({
+          options: MicrosandboxWorkspace.fromEnv(process.env),
+        }),
+      }),
+    ),
     Mcp.node.replace(
       Mcp.configured({
         clientInfo: {

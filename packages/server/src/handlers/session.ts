@@ -12,6 +12,7 @@ import { SessionMediaMessageResponse } from "@opencode/protocol/groups/message"
 import { SessionMediaInboxResponse } from "@opencode/protocol/groups/session"
 import { Api } from "../api"
 import { wantsMediaRefs } from "../media-uri"
+import { makeWorkspace } from "./workspace"
 import {
   ConflictError,
   CommandExecutionError,
@@ -40,6 +41,7 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
     const transfer = yield* SessionTransfer.Service
     const instructions = yield* InstructionEntry.Service
     const instances = yield* Instance.Service
+    const workspace = yield* makeWorkspace
     const requireSession = (sessionID: Session.ID) =>
       session.get(sessionID).pipe(Effect.catchTag("Session.NotFoundError", missingSession))
     const requireOwnedForm = Effect.fnUntraced(function* (sessionID: Form.Info["sessionID"], formID: Form.ID) {
@@ -101,6 +103,15 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
       .handle(
         "session.create",
         Effect.fn(function* (ctx) {
+          const { workspaceID, parentID } = ctx.payload
+          if (workspaceID !== undefined && parentID !== undefined)
+            return yield* new InvalidRequestError({
+              message: "A child session runs in its parent's workspace; omit workspaceID",
+              field: "workspaceID",
+            })
+          if (workspaceID !== undefined) yield* workspace.ready(workspaceID)
+          const directory = ctx.payload.location ?? { directory: AbsolutePath.make(process.cwd()) }
+          const location = workspaceID === undefined ? directory : { ...directory, workspaceID }
           return {
             data: yield* session
               .create({
@@ -110,9 +121,7 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
                 model: ctx.payload.model,
                 metadata: ctx.payload.metadata,
                 permissions: ctx.payload.permissions,
-                ...(ctx.payload.parentID === undefined
-                  ? { location: ctx.payload.location ?? { directory: AbsolutePath.make(process.cwd()) } }
-                  : { parentID: ctx.payload.parentID }),
+                ...(parentID === undefined ? { location } : { parentID }),
               })
               .pipe(Effect.catchTag("Session.NotFoundError", missingSession)),
           }

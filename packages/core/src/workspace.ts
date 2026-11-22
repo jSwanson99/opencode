@@ -3,7 +3,21 @@ export * as Workspace from "./workspace.js"
 import { Workspace } from "@opencode/schema/workspace"
 import { makeGlobalNode } from "@opencode/util/effect/app-node"
 import { eq } from "drizzle-orm"
-import { Clock, Context, Deferred, Duration, Effect, Exit, FiberSet, Layer, Ref, Schedule, Schema, Scope } from "effect"
+import {
+  Clock,
+  Context,
+  Deferred,
+  Duration,
+  Effect,
+  Exit,
+  FiberSet,
+  Layer,
+  Option,
+  Ref,
+  Schedule,
+  Schema,
+  Scope,
+} from "effect"
 import { systemError } from "effect/PlatformError"
 import { make } from "effect/process/ChildProcessSpawner"
 import type { EnvironmentDriver } from "./environment/driver.js"
@@ -256,6 +270,9 @@ const layer = (options: Options) =>
         }),
         provision,
         connect: Effect.fn("Workspace.connect")(function* (workspaceID) {
+          // Only the provider's shell is read here: a missing workspace still fails at its first use.
+          const row = yield* find(workspaceID)
+          const provider = row ? Option.getOrUndefined(yield* Effect.option(registry.get(row.provider))) : undefined
           const acquire = Effect.acquireRelease(
             // A live connection implies the binding is already persisted, so skip the provision hop.
             Effect.suspend(() => (connections.has(workspaceID) ? Effect.void : provision(workspaceID))).pipe(
@@ -312,7 +329,7 @@ const layer = (options: Options) =>
             mkdir: (path) => withFiles(path, (files) => files.mkdir(path)),
             append: (path, bytes) => withFiles(path, (files) => files.append(path, bytes)),
           }
-          return { spawner, overrides }
+          return { spawner, overrides, shell: provider?.shell }
         }),
         destroy: Effect.fn("Workspace.destroy")(function* (workspaceID) {
           // Settling the shared attempt cancels its racing provision body and fails

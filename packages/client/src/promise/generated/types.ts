@@ -366,6 +366,8 @@ export type MachineInfo = {
 
 export type MachineReach = { type: "url"; url: string }
 
+export type WorkspaceDestroyResult = { destroyed: boolean }
+
 export type ReferenceGitSource = { type: "git"; repository: string; branch?: string }
 
 export type VcsBranch = { current?: string; default?: string }
@@ -696,6 +698,8 @@ export type InstructionEntrySnapshot = Array<{ key: InstructionEntryKey; value: 
 export type EventLogSynced = { type: "log.synced"; aggregateID: string; seq?: EventSeq }
 
 export type LocationRef = { directory: AbsolutePath; workspaceID?: WorkspaceID }
+
+export type WorkspaceInfo = { id: WorkspaceID; provider: string; createdAt: number; lastUsedAt: number }
 
 export type SessionMessageAssistantText1 = { type: "text"; text: string; native?: SessionMessageNative1 }
 
@@ -2668,6 +2672,7 @@ export type ConfigEntry =
           console_watches?: boolean
           recommended_api?: boolean
           full_codemode?: boolean
+          workspaces?: boolean
           machines?: boolean
           home_memory?: boolean
           project_overlay?: boolean
@@ -3132,6 +3137,10 @@ export type InvalidCursorError = { readonly _tag: "InvalidCursorError"; readonly
 export const isInvalidCursorError = (value: unknown): value is InvalidCursorError =>
   typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "InvalidCursorError"
 
+export type ForbiddenError = { readonly _tag: "ForbiddenError"; readonly message: string }
+export const isForbiddenError = (value: unknown): value is ForbiddenError =>
+  typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "ForbiddenError"
+
 export type SessionNotFoundError = {
   readonly _tag: "SessionNotFoundError"
   readonly sessionID: string
@@ -3266,10 +3275,6 @@ export type ProviderRequestError = {
 }
 export const isProviderRequestError = (value: unknown): value is ProviderRequestError =>
   typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "ProviderRequestError"
-
-export type ForbiddenError = { readonly _tag: "ForbiddenError"; readonly message: string }
-export const isForbiddenError = (value: unknown): value is ForbiddenError =>
-  typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "ForbiddenError"
 
 export type VideoNotFoundError = {
   readonly _tag: "VideoNotFoundError"
@@ -3494,6 +3499,7 @@ export type SessionCreateInput = {
   readonly agent?: string | null | undefined
   readonly model?: { readonly id: string; readonly providerID: string; readonly variant?: string } | null | undefined
   readonly location?: { readonly directory: string } | null | undefined
+  readonly workspaceID?: string | null | undefined
   readonly metadata?: { readonly [x: string]: JsonValue } | null | undefined
   readonly permissions?:
     | ReadonlyArray<{ readonly action: string; readonly resource: string; readonly effect: "allow" | "deny" | "ask" }>
@@ -4871,6 +4877,14 @@ export type ExperimentalMachineAddOutput = { data: MachineInvite }["data"]
 export type ExperimentalMachineRemoveInput = { readonly name: string }
 
 export type ExperimentalMachineRemoveOutput = void
+
+export type ExperimentalWorkspaceCreateInput = { readonly provider: string; readonly id?: string | undefined }
+
+export type ExperimentalWorkspaceCreateOutput = { data: WorkspaceInfo }["data"]
+
+export type ExperimentalWorkspaceDestroyInput = { readonly workspaceID: string }
+
+export type ExperimentalWorkspaceDestroyOutput = { data: WorkspaceDestroyResult }["data"]
 
 export type ShellListInput = { readonly location?: { readonly directory?: string | undefined } | undefined }
 
