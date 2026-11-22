@@ -17,6 +17,8 @@ export const registry = {
     "Watch Slack threads, GitHub pull requests, issues, commits and Actions runs, and the workspace's MCP servers' events through OpenCode Console, and wake sessions when they change.",
   recommended_api: "Use each model's recommended API from models.dev instead of the first API it lists.",
   full_codemode: "Enable the full Code Mode work in progress.",
+  workspaces:
+    "Enable the experimental workspace HTTP routes: create a workspace from a provider such as microsandbox, and create sessions whose tools run in it.",
   machines: "Let a tool path name a machine, as in gpu:/work/train.py, and act on that machine's files and processes.",
   home_memory:
     "Give sessions in the home folder a persistent memory/, docs/ and scripts/ workspace the agent can use freely, tidied by a daily maintenance session that reads the day's home-folder conversations.",

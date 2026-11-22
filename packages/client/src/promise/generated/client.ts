@@ -284,6 +284,10 @@ import type {
   ExperimentalMachineAddOutput,
   ExperimentalMachineRemoveInput,
   ExperimentalMachineRemoveOutput,
+  ExperimentalWorkspaceCreateInput,
+  ExperimentalWorkspaceCreateOutput,
+  ExperimentalWorkspaceDestroyInput,
+  ExperimentalWorkspaceDestroyOutput,
   ShellListInput,
   ShellListOutput,
   ShellCreateInput,
@@ -647,11 +651,12 @@ export function make(options: ClientOptions) {
               agent: input?.["agent"],
               model: input?.["model"],
               location: input?.["location"],
+              workspaceID: input?.["workspaceID"],
               metadata: input?.["metadata"],
               permissions: input?.["permissions"],
             },
             successStatus: 200,
-            declaredStatuses: [400, 401, 404],
+            declaredStatuses: [400, 401, 403, 404, 503],
             empty: false,
           },
           requestOptions,
@@ -1809,6 +1814,31 @@ export function make(options: ClientOptions) {
             },
             requestOptions,
           ),
+      },
+      workspace: {
+        create: (input: ExperimentalWorkspaceCreateInput, requestOptions?: RequestOptions) =>
+          request<{ readonly data: ExperimentalWorkspaceCreateOutput }>(
+            {
+              method: "POST",
+              path: `/api/experimental/workspace`,
+              body: { provider: input["provider"], id: input["id"] },
+              successStatus: 200,
+              declaredStatuses: [400, 401, 403, 409, 503],
+              empty: false,
+            },
+            requestOptions,
+          ).then((value) => value.data),
+        destroy: (input: ExperimentalWorkspaceDestroyInput, requestOptions?: RequestOptions) =>
+          request<{ readonly data: ExperimentalWorkspaceDestroyOutput }>(
+            {
+              method: "DELETE",
+              path: `/api/experimental/workspace/${encodeURIComponent(input.workspaceID)}`,
+              successStatus: 200,
+              declaredStatuses: [400, 401, 403, 503],
+              empty: false,
+            },
+            requestOptions,
+          ).then((value) => value.data),
       },
       migration: {
         v1: {

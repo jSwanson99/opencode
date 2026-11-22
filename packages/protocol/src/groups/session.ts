@@ -20,6 +20,7 @@ import {
   FormAlreadySettledError,
   FormInvalidAnswerError,
   FormNotFoundError,
+  ForbiddenError,
   InvalidCursorError,
   InvalidRequestError,
   MessageNotFoundError,
@@ -34,6 +35,7 @@ import { Skill } from "@opencode/schema/skill"
 import { Model } from "@opencode/schema/model"
 import { Permission } from "@opencode/schema/permission"
 import { Location } from "@opencode/schema/location"
+import { Workspace } from "@opencode/schema/workspace"
 import { SessionEvent } from "@opencode/schema/session-event"
 import { EventLog } from "@opencode/schema/event-log"
 import { FileDiff } from "@opencode/schema/file-diff"
@@ -175,11 +177,15 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S, FormI ext
           agent: Agent.ID.pipe(Schema.optional),
           model: Model.Ref.pipe(Schema.optional),
           location: Location.PublicRef.pipe(Schema.optional),
+          workspaceID: Workspace.ID.pipe(Schema.optional).annotate({
+            description:
+              "Run the session's tools in this workspace (see experimental.workspace.create). The location's directory is a path in its machine. Behind the workspaces flag.",
+          }),
           metadata: Session.Metadata.pipe(Schema.optional),
           permissions: Permission.Ruleset.pipe(Schema.optional),
         }),
         success: Schema.Struct({ data: PublicSessionInfo }),
-        error: SessionNotFoundError,
+        error: [SessionNotFoundError, InvalidRequestError, ForbiddenError, ServiceUnavailableError],
       }).annotateMerge(
         OpenApi.annotations({
           identifier: "session.create",

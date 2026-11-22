@@ -280,6 +280,10 @@ import type {
   ExperimentalMachineAddOutput,
   ExperimentalMachineRemoveInput,
   ExperimentalMachineRemoveOutput,
+  ExperimentalWorkspaceCreateInput,
+  ExperimentalWorkspaceCreateOutput,
+  ExperimentalWorkspaceDestroyInput,
+  ExperimentalWorkspaceDestroyOutput,
   ShellListInput,
   ShellListOutput,
   ShellCreateInput,
@@ -465,6 +469,7 @@ const EndpointSessionCreate = (raw: RawClient["server.session"]) => (input?: Ses
         agent: input?.["agent"],
         model: input?.["model"],
         location: input?.["location"],
+        workspaceID: input?.["workspaceID"],
         metadata: input?.["metadata"],
         permissions: input?.["permissions"],
       },
@@ -1786,6 +1791,24 @@ const EndpointExperimentalMachineRemove =
       raw["machine.remove"]({ params: { name: input["name"] } }).pipe(Effect.mapError(mapClientError)),
     )
 
+const EndpointExperimentalWorkspaceCreate =
+  (raw: RawClient["server.experimental"]) => (input: ExperimentalWorkspaceCreateInput) =>
+    preserveEffect<ExperimentalWorkspaceCreateOutput>()(
+      raw["workspace.create"]({ payload: { provider: input["provider"], id: input["id"] } }).pipe(
+        Effect.mapError(mapClientError),
+        Effect.map((value) => value.data),
+      ),
+    )
+
+const EndpointExperimentalWorkspaceDestroy =
+  (raw: RawClient["server.experimental"]) => (input: ExperimentalWorkspaceDestroyInput) =>
+    preserveEffect<ExperimentalWorkspaceDestroyOutput>()(
+      raw["workspace.destroy"]({ params: { workspaceID: input["workspaceID"] } }).pipe(
+        Effect.mapError(mapClientError),
+        Effect.map((value) => value.data),
+      ),
+    )
+
 const adaptGroupExperimental = (raw: RawClient["server.experimental"]) => ({
   persistentPty: {
     read: EndpointExperimentalPersistentPtyRead(raw),
@@ -1821,6 +1844,7 @@ const adaptGroupExperimental = (raw: RawClient["server.experimental"]) => ({
     add: EndpointExperimentalMachineAdd(raw),
     remove: EndpointExperimentalMachineRemove(raw),
   },
+  workspace: { create: EndpointExperimentalWorkspaceCreate(raw), destroy: EndpointExperimentalWorkspaceDestroy(raw) },
 })
 
 const EndpointShellList = (raw: RawClient["server.shell"]) => (input?: ShellListInput) =>

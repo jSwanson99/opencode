@@ -695,6 +695,7 @@
         "@opencode/simulation": "workspace:*",
         "@opencode/util": "workspace:*",
         "effect": "catalog:",
+        "microsandbox": "0.7.16",
       },
       "devDependencies": {
         "@opencode/client": "workspace:*",
@@ -1723,6 +1724,8 @@
 
     "@mdx-js/mdx": ["@mdx-js/mdx@3.1.1", "", { "dependencies": { "@types/estree": "^1.0.0", "@types/estree-jsx": "^1.0.0", "@types/hast": "^3.0.0", "@types/mdx": "^2.0.0", "acorn": "^8.0.0", "collapse-white-space": "^2.0.0", "devlop": "^1.0.0", "estree-util-is-identifier-name": "^3.0.0", "estree-util-scope": "^1.0.0", "estree-walker": "^3.0.0", "hast-util-to-jsx-runtime": "^2.0.0", "markdown-extensions": "^2.0.0", "recma-build-jsx": "^1.0.0", "recma-jsx": "^1.0.0", "recma-stringify": "^1.0.0", "rehype-recma": "^1.0.0", "remark-mdx": "^3.0.0", "remark-parse": "^11.0.0", "remark-rehype": "^11.0.0", "source-map": "^0.7.0", "unified": "^11.0.0", "unist-util-position-from-estree": "^2.0.0", "unist-util-stringify-position": "^4.0.0", "unist-util-visit": "^5.0.0", "vfile": "^6.0.0" } }, "sha512-f6ZO2ifpwAQIpzGWaBQT2TXxPv6z3RBzQKpVftEWN78Vl/YweF1uwussDx8ECAXVtr3Rs89fKyG9YlzUs9DyGQ=="],
 
+    "@microsandbox/types": ["@microsandbox/types@0.7.16", "", {}, "sha512-T6u/KpX6NJ558uMykhZpM++4XxaUg/zT/5X7dFBp0EZmlygGOIENajQxvls/60nCoWcrs2jce7W7OvKWVB1qnw=="],
+
     "@modelcontextprotocol/client": ["@modelcontextprotocol/client@2.4.0", "", { "dependencies": { "@modelcontextprotocol/core": "2.4.0", "cross-spawn": "^7.0.5", "eventsource": "^3.0.2", "eventsource-parser": "^3.0.8", "jose": "^6.1.3", "pkce-challenge": "^5.0.0", "zod": "^4.2.0" } }, "sha512-LgrD2OphHuG12vfKFKz6SOnq7bKHQmhGJIAYdD+MZBn2npHEyry6uD8zvktodtl5CQM85MO0anUyD9JwmUmxww=="],
 
     "@modelcontextprotocol/core": ["@modelcontextprotocol/core@2.4.0", "", { "dependencies": { "zod": "^4.2.0" } }, "sha512-z8QBKqdfXLPzkLQuG4xp8hrVEMm1PZ1IgxMN2sMbJiFiAKOWXnAzogXn2W4aqIBlP1ea6U5yiqVquvUNM1Cj6Q=="],
@@ -2400,6 +2403,16 @@
     "@stablelib/base64": ["@stablelib/base64@1.0.1", "", {}, "sha512-1bnPQqSxSuc3Ii6MhBysoWCg58j97aUjuCSZrGSmDxNqtytIi0k8utUenAwTZN4V5mXXYGsVUI9zeBqy+jBOSQ=="],
 
     "@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
+
+    "@superradcompany/microsandbox-darwin-arm64": ["@superradcompany/microsandbox-darwin-arm64@0.7.16", "", { "os": "darwin", "cpu": "arm64" }, "sha512-CVfS/ABvHXVkPhdOqQT7vHn8VuanYkS95hUBapFtKg91r89a7G6Bnc/n3ZJm1NqbbeuiLa30Tdku112WCHzu1w=="],
+
+    "@superradcompany/microsandbox-linux-arm64-gnu": ["@superradcompany/microsandbox-linux-arm64-gnu@0.7.16", "", { "os": "linux", "cpu": "arm64", "libc": "glibc" }, "sha512-Qg1jA61ymatA1svOpyjdk6svN7dTnAzfO6yWBuLn81u30IJ4hLlTtSwexTyZdwa1IHzL4U2H/314h+Z1sCFo/A=="],
+
+    "@superradcompany/microsandbox-linux-x64-gnu": ["@superradcompany/microsandbox-linux-x64-gnu@0.7.16", "", { "os": "linux", "cpu": "x64", "libc": "glibc" }, "sha512-K/Odpa+tUXIhKrPk5PqmpaUqeiL6VPlD0QfzVz8fDqzaS6SFVZ8JIVK2QS9J0/2s6b5kVlgRb59FGXi8vHLNCA=="],
+
+    "@superradcompany/microsandbox-win32-arm64-msvc": ["@superradcompany/microsandbox-win32-arm64-msvc@0.7.16", "", { "os": "win32", "cpu": "arm64" }, "sha512-LmRB1go0Ra6kq0FAYU4aFT1t2kcGG9JhEQl1S9NvcpRxeC/JhR8B/ObSci5ssZKZRTfYw+B8MA9ya86e8Uw4Ew=="],
+
+    "@superradcompany/microsandbox-win32-x64-msvc": ["@superradcompany/microsandbox-win32-x64-msvc@0.7.16", "", { "os": "win32", "cpu": "x64" }, "sha512-1YU3niRWf+MOt8DqUCd0EnOD1L+xmta62gXXTlm0hjpgQmokPRP2ysMH0U7RxYNayv1OBavE6eo2V/1KH7esGw=="],
 
     "@swc/helpers": ["@swc/helpers@0.5.23", "", { "dependencies": { "tslib": "^2.8.0" } }, "sha512-5lSsMOTXURePglDfvuAQUqkGek9Hg2kksOYay2m0+XR++b2NWYL/4sWyuvVBIs8oKnJaxkdi9whaL/sqN13afw=="],
 
@@ -3696,6 +3709,8 @@
     "micromark-util-types": ["micromark-util-types@2.0.2", "", {}, "sha512-Yw0ECSpJoViF1qTU4DC6NwtC4aWGt1EkzaQB8KPPyCRR8z9TWeV0HbEFGTO+ZY1wB22zmxnJqhPyTpOVCpeHTA=="],
 
     "micromatch": ["micromatch@4.0.8", "", { "dependencies": { "braces": "^3.0.3", "picomatch": "^2.3.1" } }, "sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA=="],
+
+    "microsandbox": ["microsandbox@0.7.16", "", { "dependencies": { "@microsandbox/types": "0.7.16" }, "optionalDependencies": { "@superradcompany/microsandbox-darwin-arm64": "0.7.16", "@superradcompany/microsandbox-linux-arm64-gnu": "0.7.16", "@superradcompany/microsandbox-linux-x64-gnu": "0.7.16", "@superradcompany/microsandbox-win32-arm64-msvc": "0.7.16", "@superradcompany/microsandbox-win32-x64-msvc": "0.7.16" }, "bin": { "msb": "bin/microsandbox.cjs", "microsandbox": "bin/microsandbox.cjs" } }, "sha512-qSlB+OOb/xZAYkzbnN4ss5BpmSZRaYgm00rg8skWsWrYKhx6jabHYSQmRxo+o0YocOuEAScHMJeBe+vKLQxSqA=="],
 
     "mime": ["mime@2.6.0", "", { "bin": { "mime": "cli.js" } }, "sha512-USPkMeET31rOMiarsBNIHZKLGgvKc/LrjofAnBlOttf5ajRvqiRA8QsenbcooctK6d6Ts6aqZXBA+XbkKthiQg=="],
 

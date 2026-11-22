@@ -34,7 +34,8 @@
     "@opencode/schema": "workspace:*",
     "@opencode/simulation": "workspace:*",
     "@opencode/util": "workspace:*",
-    "effect": "catalog:"
+    "effect": "catalog:",
+    "microsandbox": "0.7.16"
   },
   "devDependencies": {
     "@opencode/pty": "0.6.0",
